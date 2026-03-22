@@ -5,6 +5,7 @@ import { ScrollReveal } from "@/components/ScrollReveal";
 import { Link } from "react-router-dom";
 // import Spline from '@splinetool/react-spline';
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { InteractiveBackground } from "@/components/InteractiveBackground";
 import {
   Video,
   MonitorPlay,
@@ -42,19 +43,7 @@ export default function LandingPage() {
 
       {/* Hero Section with Spline */}
       <section className="relative min-h-[100svh] flex flex-col justify-center">
-        {/* Beautiful Animated Abstract Background */}
-        <div className="absolute inset-0 w-full h-full z-0 overflow-hidden bg-background">
-          {/* Subtle Grid Pattern Overlay */}
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0wIDBoNDB2NDBIMHoiIGZpbGw9Im5vbmUiLz4KPHBhdGggZD0iTTAgNDBMMCAwTDQwIDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgzMCwgMjEwLCAxNDAsIDAuMSkiIHN0cm9rZS13aWR0aD0iMSIvPgo8L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white_20%,transparent_100%)] opacity-60"></div>
-
-          {/* Glowing Ambient Orbs */}
-          <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-blob" />
-          <div className="absolute bottom-[10%] right-[-5%] w-[40%] h-[40%] rounded-full bg-accent/20 blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-blob animation-delay-2000" />
-          <div className="absolute top-[30%] left-[20%] w-[30%] h-[30%] rounded-full bg-primary/10 blur-[100px] mix-blend-multiply dark:mix-blend-screen animate-blob animation-delay-4000" />
-
-          {/* Gradient overlay at bottom to blend into next section */}
-          <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background to-transparent" />
-        </div>
+        <InteractiveBackground />
 
         {/* Hero Content */}
         <div className="container relative z-10 flex-1 flex flex-col justify-center mt-20 md:mt-0">
@@ -122,7 +111,8 @@ export default function LandingPage() {
         <section id="solution" className="py-20 md:py-28 border-t border-border overflow-hidden">
           <div className="container relative">
             {/* Background elements */}
-            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -translate-y-1/2 pointer-events-none animate-blob" />
+            <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] -translate-y-1/2 pointer-events-none animate-blob" />
+            <div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-accent/10 rounded-full blur-[100px] pointer-events-none animate-blob animation-delay-4000" />
             
             <ScrollReveal className="text-center max-w-3xl mx-auto mb-16 md:mb-24 relative z-10">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent font-semibold text-xs tracking-widest uppercase mb-6 border border-accent/20">
@@ -485,6 +475,7 @@ export default function LandingPage() {
         <section className="py-24 md:py-32 border-t border-border relative overflow-hidden">
           {/* Ambient glow behind the CTA box */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] rounded-full bg-primary/20 blur-[120px] pointer-events-none dark:mix-blend-screen animate-blob" />
+          <div className="absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] rounded-full bg-accent/20 blur-[120px] pointer-events-none dark:mix-blend-screen animate-blob animation-delay-2000" />
 
           <div className="container relative z-10">
             <ScrollReveal>

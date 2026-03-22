@@ -3,7 +3,7 @@ import { Footer } from "@/components/Footer";
 import { PricingCard } from "@/components/pricing/PricingCard";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 export default function PricingPage() {
   const plans = [
@@ -82,7 +82,7 @@ export default function PricingPage() {
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-accent to-primary" />
               <h2 className="text-3xl font-display font-bold mb-8">Ready to upgrade your meetings?</h2>
               <Button size="xl" className="h-14 px-8 text-lg rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all" asChild>
-                <Link to="/signup">
+                <Link href="/signup">
                   Start Free <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>

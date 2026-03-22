@@ -2,7 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ArrowRight, Wifi, Calendar, MessageSquare, MonitorPlay, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 export default function FeaturesPage() {
   const features = [
@@ -80,7 +80,7 @@ export default function FeaturesPage() {
                 Ready to experience these features?
               </h2>
               <Button variant="secondary" size="xl" className="h-14 px-8 text-lg rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all relative z-10" asChild>
-                <Link to="/pricing">
+                <Link href="/pricing">
                   See Pricing Plans <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
               </Button>

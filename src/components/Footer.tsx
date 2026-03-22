@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -27,7 +29,7 @@ export function Footer() {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
-            <span className="font-display text-lg font-bold">ProsConnect</span>
+            <img src="https://res.cloudinary.com/depeqzb6z/image/upload/v1774177147/Group_2_nvkmjl.png" alt="ProsConnect" className="h-7 md:h-8 w-auto mb-2" />
             <p className="mt-3 text-sm opacity-70 text-pretty max-w-[240px]">
               Professional virtual meetings built for African businesses and teams.
             </p>
@@ -35,25 +37,25 @@ export function Footer() {
           <div>
             <h4 className="text-sm font-semibold mb-3 opacity-80">Product</h4>
             <ul className="space-y-2 text-sm opacity-70">
-              <li><a href="#features" className="hover:opacity-100 transition-opacity">Features</a></li>
-              <li><a href="#pricing" className="hover:opacity-100 transition-opacity">Pricing</a></li>
-              <li><a href="#" className="hover:opacity-100 transition-opacity">Security</a></li>
+              <li><Link href="/features" className="hover:opacity-100 transition-opacity">Features</Link></li>
+              <li><Link href="/pricing" className="hover:opacity-100 transition-opacity">Pricing</Link></li>
+              <li><Link href="#" className="hover:opacity-100 transition-opacity">Security</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="text-sm font-semibold mb-3 opacity-80">Company</h4>
             <ul className="space-y-2 text-sm opacity-70">
-              <li><a href="#" className="hover:opacity-100 transition-opacity">About</a></li>
-              <li><a href="#" className="hover:opacity-100 transition-opacity">Blog</a></li>
-              <li><a href="#" className="hover:opacity-100 transition-opacity">Careers</a></li>
+              <li><Link href="/about" className="hover:opacity-100 transition-opacity">About</Link></li>
+              <li><Link href="/blog" className="hover:opacity-100 transition-opacity">Blog</Link></li>
+              <li><Link href="#" className="hover:opacity-100 transition-opacity">Careers</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="text-sm font-semibold mb-3 opacity-80">Support</h4>
             <ul className="space-y-2 text-sm opacity-70">
-              <li><a href="#" className="hover:opacity-100 transition-opacity">Help Centre</a></li>
-              <li><a href="#" className="hover:opacity-100 transition-opacity">Contact</a></li>
-              <li><a href="#" className="hover:opacity-100 transition-opacity">Status</a></li>
+              <li><Link href="/docs" className="hover:opacity-100 transition-opacity">Help Centre</Link></li>
+              <li><Link href="/contact" className="hover:opacity-100 transition-opacity">Contact</Link></li>
+              <li><Link href="#" className="hover:opacity-100 transition-opacity">Status</Link></li>
             </ul>
           </div>
         </div>

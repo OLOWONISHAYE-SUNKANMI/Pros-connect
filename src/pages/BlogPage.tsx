@@ -2,7 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { ArrowRight, Calendar, User, Search } from "lucide-react";
 
 export default function BlogPage() {
@@ -117,7 +117,7 @@ export default function BlogPage() {
                 
                 <div>
                   <Button size="xl" className="rounded-xl font-bold shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-1 transition-all group/btn" asChild>
-                    <Link to="#">
+                    <Link href="#">
                       Read More <ArrowRight className="ml-2 w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
                     </Link>
                   </Button>
@@ -131,7 +131,7 @@ export default function BlogPage() {
             <div className="flex items-center justify-between mb-10">
               <h3 className="text-3xl font-display font-bold">Latest Articles</h3>
               <Button variant="ghost" className="hidden sm:flex font-semibold hover:text-primary transition-colors" asChild>
-                <Link to="#">View all <ArrowRight className="ml-2 w-4 h-4" /></Link>
+                <Link href="#">View all <ArrowRight className="ml-2 w-4 h-4" /></Link>
               </Button>
             </div>
             
@@ -166,7 +166,7 @@ export default function BlogPage() {
                       {post.excerpt}
                     </p>
                     
-                    <Link to="#" className="mt-auto inline-flex items-center text-sm font-bold text-primary hover:text-accent transition-colors max-w-max pb-1 border-b-2 border-transparent hover:border-accent">
+                    <Link href="#" className="mt-auto inline-flex items-center text-sm font-bold text-primary hover:text-accent transition-colors max-w-max pb-1 border-b-2 border-transparent hover:border-accent">
                       Read More <ArrowRight className="ml-1.5 w-4 h-4" />
                     </Link>
                   </div>
@@ -176,7 +176,7 @@ export default function BlogPage() {
             
             <div className="mt-10 sm:hidden flex justify-center">
               <Button variant="outline" className="w-full rounded-xl h-12 font-bold border-border/60" asChild>
-                <Link to="#">View all <ArrowRight className="ml-2 w-4 h-4" /></Link>
+                <Link href="#">View all <ArrowRight className="ml-2 w-4 h-4" /></Link>
               </Button>
             </div>
           </ScrollReveal>

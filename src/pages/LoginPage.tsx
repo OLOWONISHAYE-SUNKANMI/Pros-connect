@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -7,38 +8,51 @@ import { Eye, EyeOff, ArrowLeft } from "lucide-react";
 
 export default function LoginPage() {
   const [showPw, setShowPw] = useState(false);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Mock login
-    navigate("/dashboard");
+    router.push("/dashboard");
   };
 
   return (
     <div className="min-h-screen bg-background flex">
-      <div className="absolute top-4 left-4 mb-20 sm:top-6 sm:left-6 z-10">
-        <Button variant="ghost" asChild className="text-muted-foreground hover:text-foreground">
-          <Link to="/"><ArrowLeft className="w-4 h-4 mr-2" /> Back to home</Link>
+      <div className="absolute top-4 right-4 mb-25 sm:top-6 sm:right-6 z-20">
+        <Button variant="ghost" asChild className="text-foreground shadow-sm">
+          <Link href="/"><ArrowLeft className="w-4 h-4 mr-2" /> Back to home</Link>
         </Button>
       </div>
       {/* Left panel */}
-      <div className="hidden lg:flex flex-col justify-between w-[45%] bg-primary text-primary-foreground p-10">
-        <Link to="/" className="font-display text-xl mt-10 font-bold">ProsConnect</Link>
-        <div>
-          <h2 className="font-display text-3xl font-bold leading-tight text-balance">
-            Your next productive meeting is one click away
-          </h2>
-          <p className="mt-4 opacity-70 max-w-md">Trusted by 12,000+ professionals across Lagos, Abuja, Port Harcourt and beyond.</p>
+      <div className="relative hidden lg:flex flex-col justify-between w-[45%] text-white p-10 overflow-hidden">
+        {/* Background Image */}
+        <div
+          className="absolute inset-0 z-0 bg-cover bg-center"
+          style={{ backgroundImage: `url('https://res.cloudinary.com/depeqzb6z/image/upload/v1774179320/self-employed-man-managing-business-communications-video-call_stgdqt.jpg')` }}
+        />
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 z-0 bg-primary/90 mix-blend-multiply" />
+        <div className="absolute inset-0 z-0 bg-black/40" />
+
+        <div className="relative z-10 flex flex-col h-full justify-between mt-8">
+          <Link href="/" className="font-display text-2xl font-bold flex items-center gap-2">
+            <img src="https://res.cloudinary.com/depeqzb6z/image/upload/v1774177147/Group_2_nvkmjl.png" alt="ProsConnect" className="h-8 w-auto invert brightness-0" />
+          </Link>
+          <div>
+            <h2 className="font-display text-3xl md:text-5xl font-bold leading-tight text-balance">
+              Your next productive meeting is one click away
+            </h2>
+            <p className="mt-6 text-white/80 max-w-md text-lg">Trusted by 12,000+ professionals across Lagos, Abuja, Port Harcourt and beyond.</p>
+          </div>
+          <p className="text-sm text-white/60">© {new Date().getFullYear()} ProsConnect</p>
         </div>
-        <p className="text-sm opacity-40">© {new Date().getFullYear()} ProsConnect</p>
       </div>
 
       {/* Right panel */}
       <div className="flex-1 flex flex-col p-6 relative">
 
         <div className="w-full max-w-sm m-auto">
-          <Link to="/" className="font-display text-xl font-bold text-primary lg:hidden block mb-8 mt-10 sm:mt-0">ProsConnect</Link>
+          <Link href="/" className="font-display text-xl font-bold text-primary lg:hidden block mb-8 mt-10 sm:mt-0">ProsConnect</Link>
           <h1 className="font-display text-2xl font-bold mb-1">Welcome back</h1>
           <p className="text-sm text-muted-foreground mb-8">Enter your credentials to access your dashboard</p>
 
@@ -92,7 +106,7 @@ export default function LoginPage() {
 
           <p className="text-sm text-center text-muted-foreground mt-8">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-primary font-medium hover:underline">Sign up</Link>
+            <Link href="/signup" className="text-primary font-medium hover:underline">Sign up</Link>
           </p>
         </div>
       </div>

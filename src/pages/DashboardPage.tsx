@@ -1,32 +1,18 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Video,
-  Calendar,
-  MessageSquare,
-  LayoutDashboard,
-  LogOut,
-  Plus,
-  Clock,
-  Users,
-  Search,
-  ChevronRight,
-} from "lucide-react";
+import { Video, Clock, Users, ChevronRight, Plus, Copy } from "lucide-react";
+import Link from "next/link";
 
 // Mock data
 const upcomingMeetings = [
-  { id: "1", title: "Q1 Strategy Review", date: "Today, 2:00 PM", participants: 8, host: "You", status: "upcoming" as const },
-  { id: "2", title: "Design Sprint Kickoff", date: "Today, 4:30 PM", participants: 5, host: "You", status: "upcoming" as const },
-  { id: "3", title: "Client Onboarding – Dangote Group", date: "Tomorrow, 10:00 AM", participants: 12, host: "Emeka N.", status: "upcoming" as const },
-  { id: "4", title: "Weekly Engineering Sync", date: "Wed, 9:00 AM", participants: 6, host: "You", status: "upcoming" as const },
+  { id: "1", title: "Q1 Strategy Review", date: "Today, 2:00 PM", participants: 8, host: "You", status: "upcoming" },
+  { id: "2", title: "Design Sprint Kickoff", date: "Today, 4:30 PM", participants: 5, host: "You", status: "upcoming" },
 ];
 
 const recentMeetings = [
   { id: "5", title: "Product Demo – Flutterwave", date: "Yesterday", duration: "47 min", participants: 9 },
   { id: "6", title: "Team Retrospective", date: "Mar 18", duration: "32 min", participants: 4 },
-  { id: "7", title: "Investor Update Call", date: "Mar 17", duration: "1h 12 min", participants: 3 },
 ];
 
 const stats = [
@@ -39,157 +25,129 @@ export default function DashboardPage() {
   const [showSchedule, setShowSchedule] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background flex">
-      {/* Sidebar */}
-      <aside className="hidden md:flex flex-col w-60 bg-sidebar text-sidebar-foreground border-r border-sidebar-border shrink-0">
-        <div className="p-5">
-          <span className="font-display text-lg font-bold">ProsConnect</span>
+    <div className="space-y-8 animate-in fade-in duration-500">
+      {/* Quick Actions & Welcome */}
+      <div className="flex flex-col md:flex-row gap-6 md:items-end justify-between bg-card p-6 rounded-3xl border shadow-sm relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none" />
+        
+        <div className="relative z-10">
+          <h2 className="font-display text-3xl font-bold mb-2">Welcome back!</h2>
+          <p className="text-muted-foreground">You have 2 meetings scheduled for today.</p>
         </div>
-        <nav className="flex-1 px-3 space-y-1">
-          {[
-            { icon: LayoutDashboard, label: "Dashboard", active: true },
-            { icon: Video, label: "Meetings" },
-            { icon: Calendar, label: "Schedule" },
-            { icon: MessageSquare, label: "Messages" },
-          ].map((item) => (
-            <button
-              key={item.label}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                item.active
-                  ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                  : "text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50"
-              }`}
-            >
-              <item.icon className="w-4 h-4" />
-              {item.label}
-            </button>
-          ))}
-        </nav>
-        <div className="p-3 border-t border-sidebar-border">
-          <Link
-            to="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-sidebar-foreground/60 hover:text-sidebar-foreground hover:bg-sidebar-accent/50 transition-colors"
+        
+        <div className="flex gap-3 relative z-10">
+          <Button variant="outline" className="h-11 shadow-sm hover:shadow-md transition-shadow bg-background" asChild>
+            <Link href="/room/instant">Quick Start</Link>
+          </Button>
+          <Button 
+             className="h-11 shadow-md shadow-primary/20 hover:shadow-lg transition-shadow" 
+             onClick={() => setShowSchedule(!showSchedule)}
           >
-            <LogOut className="w-4 h-4" />
-            Sign Out
-          </Link>
+            <Plus className="w-4 h-4 mr-1.5" /> Schedule Meeting
+          </Button>
         </div>
-      </aside>
+      </div>
 
-      {/* Main */}
-      <main className="flex-1 overflow-auto">
-        {/* Top bar */}
-        <header className="sticky top-0 z-10 bg-background/80 backdrop-blur-md border-b px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <span className="md:hidden font-display font-bold text-primary">ProsConnect</span>
-            <h1 className="hidden md:block text-lg font-semibold">Dashboard</h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="relative hidden sm:block">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <Input placeholder="Search meetings…" className="pl-9 w-56" />
+      {/* Quick stats */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {stats.map((s) => (
+          <div key={s.label} className="bg-card rounded-2xl p-6 shadow-sm border border-border/50 flex items-center gap-4 hover:shadow-md transition-all group">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+              <s.icon className="w-6 h-6 text-primary" />
             </div>
-            <Button size="sm" onClick={() => setShowSchedule(!showSchedule)}>
-              <Plus className="w-4 h-4 mr-1" /> New Meeting
-            </Button>
-            <div className="w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold">
-              AO
+            <div>
+              <p className="text-3xl font-display font-bold tabular-nums text-foreground">{s.value}</p>
+              <p className="text-sm font-medium text-muted-foreground">{s.label}</p>
             </div>
           </div>
-        </header>
+        ))}
+      </div>
 
-        <div className="p-6 space-y-8">
-          {/* Quick stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {stats.map((s) => (
-              <div key={s.label} className="bg-card rounded-xl p-5 shadow-sm">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <s.icon className="w-4 h-4 text-primary" />
+      {showSchedule && (
+        <div className="bg-card rounded-3xl p-6 shadow-lg border-2 border-primary/20 animate-in slide-in-from-top-4">
+          <h3 className="font-display text-lg font-semibold mb-4 text-foreground">Schedule a New Meeting</h3>
+          <div className="grid md:grid-cols-2 gap-5">
+            <div>
+              <label className="text-sm font-semibold text-muted-foreground mb-1.5 block">Meeting Title</label>
+              <Input placeholder="e.g. Weekly Standup" className="bg-background h-11" />
+            </div>
+            <div>
+              <label className="text-sm font-semibold text-muted-foreground mb-1.5 block">Date & Time</label>
+              <Input type="datetime-local" className="bg-background h-11" />
+            </div>
+            <div>
+              <label className="text-sm font-semibold text-muted-foreground mb-1.5 block">Duration</label>
+              <Input placeholder="30 min" className="bg-background h-11" />
+            </div>
+            <div>
+              <label className="text-sm font-semibold text-muted-foreground mb-1.5 block">Invite Participants (emails)</label>
+              <Input placeholder="colleague@company.com" className="bg-background h-11" />
+            </div>
+          </div>
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <Button className="px-8 h-11">Schedule</Button>
+            <Button variant="ghost" className="h-11" onClick={() => setShowSchedule(false)}>Cancel</Button>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Upcoming */}
+        <div className="bg-card rounded-3xl border border-border/50 p-6 shadow-sm flex flex-col">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="font-display text-xl font-bold">Upcoming Meetings</h3>
+            <Link href="/meetings" className="text-primary text-sm font-semibold hover:underline">View all</Link>
+          </div>
+          <div className="space-y-3 flex-1">
+            {upcomingMeetings.map((m) => (
+              <div key={m.id} className="bg-background rounded-2xl p-4 border border-border/40 flex items-center justify-between hover:border-primary/30 transition-colors group">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                    <Video className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold tabular-nums">{s.value}</p>
-                    <p className="text-xs text-muted-foreground">{s.label}</p>
+                    <p className="font-bold text-[15px] text-foreground group-hover:text-primary transition-colors">{m.title}</p>
+                    <p className="text-xs font-medium text-muted-foreground mt-0.5">{m.date} · {m.participants} participants</p>
                   </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="ghost" size="icon" className="hidden sm:flex text-muted-foreground hover:text-foreground">
+                    <Copy className="w-4 h-4" />
+                  </Button>
+                  <Button size="sm" asChild className="rounded-full px-4 shadow-sm shadow-primary/20">
+                    <Link href={`/room/${m.id}`}>Join</Link>
+                  </Button>
                 </div>
               </div>
             ))}
           </div>
+        </div>
 
-          {/* Schedule form (toggle) */}
-          {showSchedule && (
-            <div className="bg-card rounded-xl p-6 shadow-sm border">
-              <h2 className="font-display text-lg font-semibold mb-4">Schedule a Meeting</h2>
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Meeting Title</label>
-                  <Input className="mt-1.5" placeholder="e.g. Weekly Standup" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Date & Time</label>
-                  <Input type="datetime-local" className="mt-1.5" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Duration</label>
-                  <Input className="mt-1.5" placeholder="30 min" />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-muted-foreground">Invite Participants (emails)</label>
-                  <Input className="mt-1.5" placeholder="colleague@company.com" />
-                </div>
-              </div>
-              <div className="mt-4 flex gap-3">
-                <Button>Schedule Meeting</Button>
-                <Button variant="ghost" onClick={() => setShowSchedule(false)}>Cancel</Button>
-              </div>
-            </div>
-          )}
-
-          {/* Upcoming */}
-          <div>
-            <h2 className="font-display text-lg font-semibold mb-4">Upcoming Meetings</h2>
-            <div className="space-y-3">
-              {upcomingMeetings.map((m) => (
-                <div key={m.id} className="bg-card rounded-xl p-4 shadow-sm flex items-center justify-between hover:shadow-md transition-shadow">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Video className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">{m.title}</p>
-                      <p className="text-xs text-muted-foreground">{m.date} · {m.participants} participants · Host: {m.host}</p>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    Join <ChevronRight className="w-3 h-3 ml-1" />
-                  </Button>
-                </div>
-              ))}
-            </div>
+        {/* Recent */}
+        <div className="bg-card rounded-3xl border border-border/50 p-6 shadow-sm flex flex-col">
+          <div className="flex items-center justify-between mb-6">
+             <h3 className="font-display text-xl font-bold">Recent Meetings</h3>
           </div>
-
-          {/* Recent */}
-          <div>
-            <h2 className="font-display text-lg font-semibold mb-4">Recent Meetings</h2>
-            <div className="space-y-3">
-              {recentMeetings.map((m) => (
-                <div key={m.id} className="bg-card rounded-xl p-4 shadow-sm flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center">
-                      <Video className="w-5 h-5 text-muted-foreground" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-sm">{m.title}</p>
-                      <p className="text-xs text-muted-foreground">{m.date} · {m.duration} · {m.participants} participants</p>
-                    </div>
+          <div className="space-y-3 flex-1">
+            {recentMeetings.map((m) => (
+              <div key={m.id} className="bg-background rounded-2xl p-4 border border-border flex items-center justify-between hover:border-muted-foreground/30 transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center shrink-0">
+                    <Clock className="w-5 h-5 text-muted-foreground" />
                   </div>
-                  <Button variant="ghost" size="sm">View Notes</Button>
+                  <div>
+                    <p className="font-bold text-[15px] text-foreground">{m.title}</p>
+                    <p className="text-xs font-medium text-muted-foreground mt-0.5">{m.date} · {m.duration} · Hosted by You</p>
+                  </div>
                 </div>
-              ))}
-            </div>
+                <Button variant="outline" size="sm" className="rounded-full" asChild>
+                   <Link href={`/recordings`}>View Details</Link>
+                </Button>
+              </div>
+            ))}
           </div>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

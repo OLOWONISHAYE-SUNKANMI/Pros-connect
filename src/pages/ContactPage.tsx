@@ -28,14 +28,14 @@ export default function ContactPage() {
         {/* Contact Info & Form */}
         <section className="px-6 py-12 relative z-20">
           <div className="container max-w-5xl mx-auto">
-            <div className="bg-card border border-border/50 rounded-[2rem] shadow-xl overflow-hidden flex flex-col md:flex-row">
+            <div className="bg-card border border-border/50 rounded-[1.5rem] md:rounded-[2rem] shadow-xl overflow-hidden flex flex-col md:flex-row">
               
               {/* Left Column: Contact Info */}
-              <div className="bg-primary text-primary-foreground p-10 md:p-14 md:w-2/5 flex flex-col relative overflow-hidden">
+              <div className="bg-primary text-primary-foreground p-6 sm:p-10 md:p-14 md:w-2/5 flex flex-col relative overflow-hidden">
                 <div className="absolute bottom-0 right-0 w-80 h-80 bg-accent/20 rounded-full blur-[80px] translate-x-1/3 translate-y-1/3 pointer-events-none animate-blob" />
                 <div className="absolute top-0 left-0 w-40 h-40 bg-primary-foreground/5 rounded-full blur-[40px] -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
                 
-                <h3 className="font-display text-2xl md:text-3xl font-bold mb-8 relative z-10">Contact Information</h3>
+                <h3 className="font-display text-2xl md:text-3xl font-bold mb-6 md:mb-8 relative z-10">Contact Information</h3>
                 
                 <div className="space-y-8 relative z-10 flex-1">
                   <div className="flex items-start gap-4 group">
@@ -63,7 +63,7 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="relative z-10 mt-16 pt-8 border-t border-primary-foreground/10">
+                <div className="relative z-10 mt-10 md:mt-16 pt-8 border-t border-primary-foreground/10">
                   <p className="font-medium text-sm opacity-70 mb-4">Follow us on social media</p>
                   <div className="flex gap-4">
                     <a href="#" className="w-10 h-10 rounded-full bg-primary-foreground/10 flex items-center justify-center hover:bg-accent hover:text-accent-foreground transition-all hover:scale-110">
@@ -80,9 +80,9 @@ export default function ContactPage() {
               </div>
 
               {/* Right Column: Contact Form */}
-              <div className="p-10 md:p-14 md:w-3/5 bg-background">
-                <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); alert("Thanks for reaching out! We'll get back to you shortly."); }}>
-                  <div className="grid sm:grid-cols-2 gap-6">
+              <div className="p-6 sm:p-10 md:p-14 md:w-3/5 bg-background">
+                <form className="space-y-5 md:space-y-6" onSubmit={(e) => { e.preventDefault(); alert("Thanks for reaching out! We'll get back to you shortly."); }}>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 md:gap-6">
                     <div className="space-y-2">
                       <Label htmlFor="name" className="text-foreground/80">Full Name</Label>
                       <Input id="name" className="h-12 bg-card" placeholder="John Doe" required />
@@ -108,8 +108,8 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  <Button type="submit" size="xl" className="w-full h-14 text-lg rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all mt-4">
-                    Send Message <Send className="w-5 h-5 ml-2" />
+                  <Button type="submit" size="xl" className="w-full h-12 md:h-14 text-base md:text-lg rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all mt-2 md:mt-4">
+                    Send Message <Send className="w-4 h-4 md:w-5 md:h-5 ml-2" />
                   </Button>
                 </form>
               </div>

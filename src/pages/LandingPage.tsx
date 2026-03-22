@@ -2,7 +2,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ScrollReveal } from "@/components/ScrollReveal";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 // import Spline from '@splinetool/react-spline';
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { InteractiveBackground } from "@/components/InteractiveBackground";
@@ -49,7 +49,7 @@ export default function LandingPage() {
         <div className="container relative z-10 flex-1 flex flex-col justify-center mt-20 md:mt-0">
           <div className="max-w-4xl mx-auto text-center">
             <ScrollReveal>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background/40 border border-border/50 mb-8 backdrop-blur-xl shadow-sm hover:bg-background/60 transition-colors">
+              <div className="inline-flex items-center mt-20 gap-2 px-4 py-2 rounded-full bg-background/40 border border-border/50 mb-8 backdrop-blur-xl shadow-sm hover:bg-background/60 transition-colors">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
@@ -74,13 +74,13 @@ export default function LandingPage() {
             <ScrollReveal delay={300}>
               <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
                 <Button size="xl" asChild className="relative group overflow-hidden w-full sm:w-auto text-lg h-14 px-8 rounded-xl shadow-xl shadow-primary/20 hover:shadow-primary/40 transition-all duration-300">
-                  <Link to="/signup">
+                  <Link href="/signup">
                     <span className="relative z-10 flex items-center font-semibold">Start for Free <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" /></span>
                     <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none" />
                   </Link>
                 </Button>
                 <Button variant="outline" size="xl" asChild className="w-full sm:w-auto text-lg h-14 px-8 rounded-xl bg-background/50 backdrop-blur-md border-border/60 hover:bg-background/80 hover:scale-[1.02] transition-all duration-300">
-                  <Link to="/login" className="font-semibold text-foreground/80 hover:text-foreground">Log In</Link>
+                  <Link href="/login" className="font-semibold text-foreground/80 hover:text-foreground">Log In</Link>
                 </Button>
               </div>
             </ScrollReveal>
@@ -113,7 +113,7 @@ export default function LandingPage() {
             {/* Background elements */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] -translate-y-1/2 pointer-events-none animate-blob" />
             <div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-accent/10 rounded-full blur-[100px] pointer-events-none animate-blob animation-delay-4000" />
-            
+
             <ScrollReveal className="text-center max-w-3xl mx-auto mb-16 md:mb-24 relative z-10">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent font-semibold text-xs tracking-widest uppercase mb-6 border border-accent/20">
                 Built for the Realities of Work in Nigeria
@@ -161,10 +161,10 @@ export default function LandingPage() {
                 <div className="bg-primary text-primary-foreground border border-primary-foreground/10 rounded-[2rem] p-6 sm:p-8 md:p-12 h-full shadow-2xl shadow-primary/20 relative overflow-hidden group flex flex-col">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-[80px] -mr-20 -mt-20 transition-transform group-hover:scale-110 duration-700 pointer-events-none" />
                   <div className="absolute bottom-0 left-0 w-64 h-64 bg-background/10 rounded-full blur-[80px] -ml-20 -mb-20 transition-transform group-hover:scale-110 duration-700 pointer-events-none" />
-                  
+
                   <div className="relative z-10 flex-1">
                     <div className="w-14 h-14 bg-accent/20 rounded-2xl flex items-center justify-center mb-8 backdrop-blur-sm border border-accent/20">
-                      <CheckCircle2 className="w-7 h-7 text-accent" />
+                      <CheckCircle2 className="w-7 h-7 text-[#ffffff]" />
                     </div>
                     <h3 className="font-display text-2xl md:text-3xl font-bold mb-4">
                       A Smarter Way to Meet and Collaborate
@@ -182,7 +182,7 @@ export default function LandingPage() {
                       ].map((item, i) => (
                         <li key={i} className="flex gap-4 items-start">
                           <div className="mt-1 bg-accent/20 rounded-full p-1 shrink-0">
-                            <Check className="w-4 h-4 text-accent" />
+                            <Check className="w-4 h-4 text-[#ffffff]" />
                           </div>
                           <span className="text-primary-foreground leading-snug">{item}</span>
                         </li>
@@ -200,12 +200,12 @@ export default function LandingPage() {
               </h3>
               <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
                 <Button size="xl" className="w-full sm:w-auto h-14 px-8 text-lg rounded-xl shadow-xl shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-1 transition-all duration-300" asChild>
-                  <Link to="/signup">
+                  <Link href="/signup">
                     Start Your First Meeting <ArrowRight className="ml-2 w-5 h-5" />
                   </Link>
                 </Button>
                 <Button variant="outline" size="xl" className="w-full sm:w-auto h-14 px-8 text-lg rounded-xl border-border hover:bg-secondary/50 transition-colors" asChild>
-                  <Link to="/signup">Try It Free</Link>
+                  <Link href="/signup">Try It Free</Link>
                 </Button>
               </div>
             </ScrollReveal>
@@ -418,7 +418,7 @@ export default function LandingPage() {
                     From sign-up to your first meeting in under 2 minutes.
                   </h3>
                   <Button variant="secondary" size="xl" className="shrink-0 w-full sm:w-auto h-14 px-8 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all hover:-translate-y-1" asChild>
-                    <Link to="/signup">
+                    <Link href="/signup">
                       Get Started Now <ArrowRight className="ml-2 w-5 h-5" />
                     </Link>
                   </Button>
@@ -462,7 +462,7 @@ export default function LandingPage() {
                       className="mt-6 w-full"
                       asChild
                     >
-                      <Link to="/signup">{plan.price === "Custom" ? "Contact Sales" : "Get Started"}</Link>
+                      <Link href="/signup">{plan.price === "Custom" ? "Contact Sales" : "Get Started"}</Link>
                     </Button>
                   </div>
                 </ScrollReveal>
@@ -491,7 +491,7 @@ export default function LandingPage() {
                     Join thousands of Nigerian professionals who've switched to ProsConnect for reliable, intelligent virtual meetings.
                   </p>
                   <Button size="xl" className="h-14 px-8 text-lg rounded-xl shadow-xl shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 hover:-translate-y-1" asChild>
-                    <Link to="/signup">
+                    <Link href="/signup">
                       Create Free Account <ArrowRight className="ml-2 w-5 h-5" />
                     </Link>
                   </Button>

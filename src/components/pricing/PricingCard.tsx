@@ -1,6 +1,6 @@
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 export interface PricingCardProps {
   name: string;
@@ -45,7 +45,7 @@ export function PricingCard({ name, price, description, features, popular, ctaTe
         className={`w-full h-14 text-lg rounded-xl border ${popular ? "shadow-lg hover:shadow-xl hover:-translate-y-1 bg-background text-foreground border-transparent" : "border-border/60 hover:bg-secondary/50"}`} 
         asChild
       >
-        <Link to="/signup">{ctaText}</Link>
+        <Link href="/signup">{ctaText}</Link>
       </Button>
     </div>
   );

@@ -1,9 +1,30 @@
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function Footer() {
   return (
-    <footer className="border-t bg-primary text-primary-foreground">
-      <div className="container py-12">
+    <footer className="border-t bg-card text-card-foreground">
+      <div className="container py-12 md:py-16">
+        {/* Waitlist Section */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-12 mb-12 border-b border-border">
+          <div className="max-w-xl text-center md:text-left">
+            <h3 className="font-display text-2xl md:text-3xl font-bold mb-2">Join our Waitlist</h3>
+            <p className="text-muted-foreground text-sm md:text-base">Be the first to know when we launch new features and get exclusive early access to ProsConnect.</p>
+          </div>
+          <form className="flex w-full sm:flex-row flex-col md:max-w-md gap-3" onSubmit={(e) => { e.preventDefault(); alert('Thank you for joining our waitlist!'); }}>
+            <Input 
+              type="email" 
+              placeholder="Enter your email address" 
+              required 
+              className="bg-background border-input text-foreground placeholder:text-muted-foreground focus-visible:ring-accent w-full" 
+            />
+            <Button type="submit" variant="default" className="bg-accent text-accent-foreground hover:bg-accent/90 whitespace-nowrap">
+              Join Now
+            </Button>
+          </form>
+        </div>
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div className="col-span-2 md:col-span-1">
             <span className="font-display text-lg font-bold">ProsConnect</span>
@@ -36,7 +57,7 @@ export function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-10 pt-6 border-t border-primary-foreground/10 text-sm opacity-50 text-center">
+        <div className="mt-10 pt-6 border-t border-border text-sm text-muted-foreground text-center">
           © {new Date().getFullYear()} ProsConnect. All rights reserved.
         </div>
       </div>

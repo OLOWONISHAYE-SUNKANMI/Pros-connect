@@ -25,6 +25,7 @@ interface WishlistFormProps {
   className?: string;
   compact?: boolean;
   onSuccess?: () => void;
+  prefilledEmail?: string;
 }
 
 export function WishlistForm({
@@ -33,9 +34,10 @@ export function WishlistForm({
   className = "",
   compact = false,
   onSuccess,
+  prefilledEmail = "",
 }: WishlistFormProps) {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(prefilledEmail);
   const [role, setRole] = useState<"client" | "professional" | "both">(defaultRole);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -43,12 +45,18 @@ export function WishlistForm({
   const [copied, setCopied] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
 
-  // Sync role if defaultRole changes (e.g. from CTA button click)
+  // Sync role and prefilled email if changed
   useEffect(() => {
     if (defaultRole) {
       setRole(defaultRole);
     }
   }, [defaultRole]);
+
+  useEffect(() => {
+    if (prefilledEmail) {
+      setEmail(prefilledEmail);
+    }
+  }, [prefilledEmail]);
 
   const handleFocus = () => {
     if (!hasStarted) {

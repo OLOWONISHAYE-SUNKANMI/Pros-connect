@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendWishlistWelcomeEmail } from "@/lib/resend";
 
 // Fallback in-memory/local registry in case PostgreSQL is not connected or in local dev
 interface LocalWishlistEntry {
@@ -166,11 +167,21 @@ export async function POST(req: Request) {
 
     const totalCount = getFallbackCount();
 
+    // 3. Send branded welcome email and add contact for email marketing via Resend
+    const emailResult = await sendWishlistWelcomeEmail({
+      name: name.trim(),
+      email: trimmedEmail,
+      role: validRole as "client" | "professional" | "both",
+      queueNumber: totalCount,
+    });
+
     return NextResponse.json(
       {
         success: true,
         message: "Successfully joined the wishlist",
         count: totalCount,
+        emailSent: emailResult.success,
+        simulated: emailResult.simulated,
       },
       { status: 201 }
     );

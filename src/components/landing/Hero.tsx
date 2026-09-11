@@ -75,6 +75,8 @@ export function Hero({ selectedRole = "client", onRoleSelect }: HeroProps) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [activeProIndex, setActiveProIndex] = useState(0);
   const [connectedState, setConnectedState] = useState<string | null>(null);
+  const [quickEmail, setQuickEmail] = useState("");
+  const [prefilledEmail, setPrefilledEmail] = useState("");
 
   const categories = ["All", "Design", "Software", "Finance"];
 
@@ -85,13 +87,52 @@ export function Hero({ selectedRole = "client", onRoleSelect }: HeroProps) {
 
   const activePro = filteredPros[activeProIndex] || filteredPros[0] || SAMPLE_PROS[0];
 
+  const triggerFormFocusAndGlow = (emailVal?: string) => {
+    const formContainer = document.getElementById("wishlist-signup-hero");
+    const nameInput = document.getElementById("wishlist-form-name") as HTMLInputElement | null;
+    const emailInput = document.getElementById("wishlist-form-email") as HTMLInputElement | null;
+
+    if (emailVal && emailInput) {
+      emailInput.value = emailVal;
+      emailInput.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+
+    if (formContainer) {
+      const yOffset = -90;
+      const y = formContainer.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+
+      formContainer.classList.add(
+        "ring-4",
+        "ring-primary",
+        "ring-offset-4",
+        "ring-offset-background",
+        "scale-[1.01]"
+      );
+      setTimeout(() => {
+        formContainer.classList.remove(
+          "ring-4",
+          "ring-primary",
+          "ring-offset-4",
+          "ring-offset-background",
+          "scale-[1.01]"
+        );
+      }, 2000);
+    }
+
+    setTimeout(() => {
+      if (emailVal && nameInput) {
+        nameInput.focus();
+      } else if (nameInput) {
+        nameInput.focus();
+      }
+    }, 400);
+  };
+
   const handleConnectClick = (proName: string) => {
     setConnectedState(proName);
     trackEvent("hero_cta_clicked", { action: "mock_connect", targetPro: proName });
-    const formElement = document.getElementById("wishlist-signup-hero");
-    if (formElement) {
-      formElement.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
+    triggerFormFocusAndGlow();
   };
 
   const handleScrollToWorks = () => {
@@ -102,8 +143,19 @@ export function Hero({ selectedRole = "client", onRoleSelect }: HeroProps) {
 
   const handleScrollToWishlist = () => {
     trackEvent("hero_cta_clicked", { action: "join_wishlist_hero" });
-    const el = document.getElementById("wishlist-signup-hero");
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    triggerFormFocusAndGlow(quickEmail.trim() || undefined);
+  };
+
+  const handleQuickSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanEmail = quickEmail.trim();
+    if (cleanEmail) {
+      setPrefilledEmail(cleanEmail);
+      trackEvent("hero_cta_clicked", { action: "quick_email_submit" });
+      triggerFormFocusAndGlow(cleanEmail);
+    } else {
+      handleScrollToWishlist();
+    }
   };
 
   return (
@@ -140,34 +192,57 @@ export function Hero({ selectedRole = "client", onRoleSelect }: HeroProps) {
             ProsConnect makes it easier to discover trusted professionals, explore their expertise, and connect with the right people for your next project, idea, or opportunity.
           </p>
 
-          {/* Quick CTA button pair */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button
-              size="xl"
-              onClick={handleScrollToWishlist}
-              className="w-full sm:w-auto h-13 px-8 text-base md:text-lg rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl shadow-primary/25 transition-all hover:scale-[1.02]"
+          {/* Interactive Wishlist Capture: Email Input + Primary CTA Button */}
+          <div className="max-w-xl mx-auto">
+            <form
+              onSubmit={handleQuickSubmit}
+              className="flex flex-col sm:flex-row items-center gap-3 p-1.5 sm:p-2 bg-card/70 border border-border/80 rounded-2xl shadow-xl backdrop-blur-xl transition-all focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20"
             >
-              Join the Wishlist
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-            <Button
-              variant="outline"
-              size="xl"
-              onClick={handleScrollToWorks}
-              className="w-full sm:w-auto h-13 px-7 text-base rounded-xl bg-background/80 hover:bg-secondary border-border text-foreground transition-all"
-            >
-              See How It Works
-              <ArrowDown className="w-4 h-4 ml-2 opacity-60" />
-            </Button>
+              <div className="relative w-full">
+                <input
+                  type="email"
+                  placeholder="Enter your email to join the wishlist..."
+                  value={quickEmail}
+                  onChange={(e) => setQuickEmail(e.target.value)}
+                  className="w-full h-12 px-4 bg-transparent border-none text-foreground placeholder:text-muted-foreground/70 text-sm md:text-base focus:outline-none"
+                />
+              </div>
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full sm:w-auto h-12 px-7 text-sm md:text-base rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 whitespace-nowrap transition-all hover:scale-[1.02] shrink-0"
+              >
+                Join the Wishlist
+                <ArrowRight className="w-4 h-4 ml-1.5" />
+              </Button>
+            </form>
+
+            <div className="flex items-center justify-center gap-6 mt-4">
+              <button
+                type="button"
+                onClick={handleScrollToWorks}
+                className="text-xs font-semibold text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 transition-colors py-1 group"
+              >
+                <span>See How It Works</span>
+                <ArrowDown className="w-3.5 h-3.5 opacity-60 group-hover:translate-y-0.5 transition-transform" />
+              </button>
+              <span className="text-muted-foreground/40 text-xs">•</span>
+              <span className="text-xs text-muted-foreground">
+                🎉 Over <strong className="text-foreground font-semibold">1,240+</strong> in early queue
+              </span>
+            </div>
           </div>
         </div>
 
         {/* Two-column Core: Form on Left + Interactive Product Visual on Right */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start max-w-6xl mx-auto">
-          {/* Wishlist Form Column */}
-          <div className="lg:col-span-5 order-2 lg:order-1" id="wishlist-signup-hero">
+          {/* Wishlist Form Column - Render first on both mobile and desktop */}
+          <div className="lg:col-span-5 order-1 lg:order-1 transition-all duration-300" id="wishlist-signup-hero">
             <div className="sticky top-24">
-              <WishlistForm defaultRole={selectedRole} />
+              <WishlistForm
+                defaultRole={selectedRole}
+                prefilledEmail={prefilledEmail}
+              />
             </div>
           </div>
 

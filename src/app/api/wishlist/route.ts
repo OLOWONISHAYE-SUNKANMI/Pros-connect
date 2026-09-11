@@ -175,6 +175,21 @@ export async function POST(req: Request) {
       queueNumber: totalCount,
     });
 
+    if (emailResult.simulated) {
+      console.log(
+        `ℹ️ [Resend Simulation] No RESEND_API_KEY detected in .env. Email to ${trimmedEmail} was simulated. Add RESEND_API_KEY in .env to send real emails.`
+      );
+    } else if (!emailResult.success) {
+      console.error(
+        `❌ [Resend Delivery Error] Email to ${trimmedEmail} failed:`,
+        emailResult.error
+      );
+    } else {
+      console.log(
+        `✅ [Resend Success] Real email sent to ${trimmedEmail}! Message ID: ${emailResult.messageId}`
+      );
+    }
+
     return NextResponse.json(
       {
         success: true,
@@ -182,6 +197,7 @@ export async function POST(req: Request) {
         count: totalCount,
         emailSent: emailResult.success,
         simulated: emailResult.simulated,
+        emailError: emailResult.error,
       },
       { status: 201 }
     );

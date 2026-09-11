@@ -28,18 +28,60 @@ export default function LandingPage() {
     });
   }, []);
 
-  const scrollToHeroWishlist = (role?: "client" | "professional" | "both") => {
+  const scrollToHeroWishlist = (
+    role?: "client" | "professional" | "both",
+    prefillEmail?: string
+  ) => {
     if (role) {
       setSelectedRole(role);
     }
-    const el = document.getElementById("wishlist-signup-hero") || document.getElementById("wishlist-form");
+
+    if (prefillEmail) {
+      const emailInputs = document.querySelectorAll<HTMLInputElement>("input[type='email']");
+      emailInputs.forEach((inp) => {
+        inp.value = prefillEmail;
+        inp.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    }
+
+    const el =
+      document.getElementById("wishlist-signup-hero") ||
+      document.getElementById("wishlist-form");
+
     if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "center" });
-      // Focus name input after a short delay
+      const yOffset = -90;
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+
+      // Highlight with fiery orange glow ring
+      el.classList.add(
+        "ring-4",
+        "ring-primary",
+        "ring-offset-4",
+        "ring-offset-background",
+        "scale-[1.01]",
+        "transition-all",
+        "duration-500"
+      );
       setTimeout(() => {
-        const input = el.querySelector<HTMLInputElement>("input[type='text']");
+        el.classList.remove(
+          "ring-4",
+          "ring-primary",
+          "ring-offset-4",
+          "ring-offset-background",
+          "scale-[1.01]"
+        );
+      }, 2000);
+
+      // Focus name input after scroll begins
+      setTimeout(() => {
+        const input =
+          el.querySelector<HTMLInputElement>("input[type='text']") ||
+          el.querySelector<HTMLInputElement>("input");
         if (input) input.focus();
-      }, 400);
+      }, 450);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
@@ -90,7 +132,7 @@ export default function LandingPage() {
 
         {/* 13. Launch / Early Access Section */}
         <LaunchCTA
-          onJoinWishlistClick={() => scrollToHeroWishlist()}
+          onJoinWishlistClick={(email) => scrollToHeroWishlist(undefined, email)}
         />
 
         {/* 14. FAQ Section */}

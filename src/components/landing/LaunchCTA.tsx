@@ -1,18 +1,29 @@
 "use client";
 
+import { useState } from "react";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/analytics";
 import { Sparkles, ArrowRight, ShieldCheck, Zap } from "lucide-react";
 
 interface LaunchCTAProps {
-  onJoinWishlistClick: () => void;
+  onJoinWishlistClick: (email?: string) => void;
 }
 
 export function LaunchCTA({ onJoinWishlistClick }: LaunchCTAProps) {
-  const handleClick = () => {
-    trackEvent("hero_cta_clicked", { source: "launch_cta_section" });
-    onJoinWishlistClick();
+  const [email, setEmail] = useState("");
+
+  const handleAction = (emailVal?: string) => {
+    trackEvent("hero_cta_clicked", {
+      source: "launch_cta_section",
+      hasEmail: Boolean(emailVal),
+    });
+    onJoinWishlistClick(emailVal);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    handleAction(email.trim() || undefined);
   };
 
   return (
@@ -38,15 +49,29 @@ export function LaunchCTA({ onJoinWishlistClick }: LaunchCTAProps) {
             We're building a better way for people and professionals to connect. Join the wishlist and be among the first to experience ProsConnect.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button
-              size="xl"
-              onClick={handleClick}
-              className="w-full sm:w-auto h-13 px-9 text-base md:text-lg rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-2xl shadow-primary/30 transition-all hover:scale-[1.02] cursor-pointer"
+          <div className="max-w-xl mx-auto mb-4">
+            <form
+              onSubmit={handleSubmit}
+              className="flex flex-col sm:flex-row items-center gap-3 p-1.5 sm:p-2 bg-card/70 border border-border/80 rounded-2xl shadow-2xl backdrop-blur-xl transition-all focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20"
             >
-              Join the Wishlist
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
+              <div className="relative w-full">
+                <input
+                  type="email"
+                  placeholder="Enter your email to join the wishlist..."
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full h-12 px-4 bg-transparent border-none text-foreground placeholder:text-muted-foreground/70 text-sm md:text-base focus:outline-none"
+                />
+              </div>
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full sm:w-auto h-12 px-8 text-sm md:text-base rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 whitespace-nowrap transition-all hover:scale-[1.02] cursor-pointer shrink-0"
+              >
+                Join the Wishlist
+                <ArrowRight className="w-4 h-4 ml-1.5" />
+              </Button>
+            </form>
           </div>
 
           <p className="text-xs md:text-sm text-muted-foreground mt-4 font-medium">

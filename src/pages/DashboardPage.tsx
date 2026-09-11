@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Video, Clock, Users, ChevronRight, Plus, Copy } from "lucide-react";
+import { Video, Clock, Users, ChevronRight, Plus, Copy, LogOut } from "lucide-react";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 
 // Mock data
 const upcomingMeetings = [
@@ -23,6 +24,12 @@ const stats = [
 
 export default function DashboardPage() {
   const [showSchedule, setShowSchedule] = useState(false);
+  const sessionContext = useSession();
+  const session = sessionContext?.data;
+
+  const handleLogout = () => {
+    signOut({ callbackUrl: "/login" });
+  };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -30,8 +37,16 @@ export default function DashboardPage() {
       <div className="flex flex-col md:flex-row gap-6 md:items-end justify-between bg-card p-6 rounded-3xl border shadow-sm relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -mr-20 -mt-20 pointer-events-none" />
         
-        <div className="relative z-10">
-          <h2 className="font-display text-3xl font-bold mb-2">Welcome back!</h2>
+        <div className="relative z-10 flex-1">
+          <div className="flex items-center justify-between">
+            <h2 className="font-display text-3xl font-bold mb-2">
+              Welcome back, {session?.user?.name?.split(" ")[0] || "User"}!
+            </h2>
+            <Button variant="ghost" size="sm" onClick={handleLogout} className="text-muted-foreground hover:text-destructive flex items-center gap-2">
+              <LogOut className="w-4 h-4" />
+              <span className="hidden sm:inline">Sign out</span>
+            </Button>
+          </div>
           <p className="text-muted-foreground">You have 2 meetings scheduled for today.</p>
         </div>
         

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,80 +6,93 @@
 
 @layer base {
   :root {
-    --background: 160 20% 98%;
-    --foreground: 160 40% 10%;
+    /* Brand Colors: Off White (#f1f1f1), Absolute Black (#000000), Fiery Orange (#d94e1f) */
+    --background: 0 0% 95%; /* #f1f1f1 Off White */
+    --foreground: 0 0% 0%; /* #000000 Absolute Black */
 
-    --card: 160 20% 99%;
-    --card-foreground: 160 40% 10%;
+    --card: 0 0% 100%; /* Pure white crisp surfaces on off-white */
+    --card-foreground: 0 0% 0%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 160 40% 10%;
+    --popover-foreground: 0 0% 0%;
 
-    --primary: 160 45% 22%;
-    --primary-foreground: 160 20% 98%;
+    --primary: 15 75% 49%; /* #d94e1f Fiery Orange */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 160 15% 94%;
-    --secondary-foreground: 160 30% 15%;
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 0 0% 5%;
 
-    --muted: 160 10% 94%;
-    --muted-foreground: 160 10% 45%;
+    --muted: 0 0% 90%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 38 85% 55%;
-    --accent-foreground: 160 30% 10%;
+    --accent: 15 75% 49%; /* #d94e1f Fiery Orange */
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 160 15% 90%;
-    --input: 160 15% 90%;
-    --ring: 160 45% 22%;
+    --border: 0 0% 85%;
+    --input: 0 0% 85%;
+    --ring: 15 75% 49%;
 
-    --radius: 0.625rem;
+    --radius: 0.75rem;
 
-    --sidebar-background: 160 30% 10%;
-    --sidebar-foreground: 40 33% 97%;
-    --sidebar-primary: 38 85% 55%;
-    --sidebar-primary-foreground: 160 30% 10%;
-    --sidebar-accent: 160 25% 18%;
-    --sidebar-accent-foreground: 40 33% 97%;
-    --sidebar-border: 160 20% 20%;
-    --sidebar-ring: 38 85% 55%;
+    --sidebar-background: 0 0% 97%;
+    --sidebar-foreground: 0 0% 0%;
+    --sidebar-primary: 15 75% 49%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 92%;
+    --sidebar-accent-foreground: 0 0% 0%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 15 75% 49%;
 
     /* Custom tokens */
-    --hero-gradient: linear-gradient(135deg, hsl(160 45% 22%) 0%, hsl(160 35% 30%) 50%, hsl(38 85% 55%) 100%);
-    --surface-warm: 40 33% 97%;
-    --text-display: 'Fraunces', serif;
-    --text-body: 'DM Sans', sans-serif;
+    --fiery-orange: 15 75% 49%;
+    --absolute-black: 0 0% 0%;
+    --off-white: 0 0% 95%;
+    --hero-gradient: linear-gradient(135deg, hsl(15 75% 49%) 0%, hsl(15 85% 58%) 50%, hsl(25 90% 52%) 100%);
+    --text-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --text-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
   .dark {
-    --background: 160 30% 6%;
-    --foreground: 40 33% 95%;
-    --card: 160 25% 10%;
-    --card-foreground: 40 33% 95%;
-    --popover: 160 25% 10%;
-    --popover-foreground: 40 33% 95%;
-    --primary: 38 85% 55%;
-    --primary-foreground: 160 30% 10%;
-    --secondary: 160 20% 15%;
-    --secondary-foreground: 40 33% 90%;
-    --muted: 160 15% 15%;
-    --muted-foreground: 40 10% 60%;
-    --accent: 38 85% 55%;
-    --accent-foreground: 160 30% 10%;
+    /* Brand Colors Dark: Absolute Black (#000000) background, Off White (#f1f1f1) text, Fiery Orange (#d94e1f) */
+    --background: 0 0% 0%; /* #000000 Absolute Black */
+    --foreground: 0 0% 95%; /* #f1f1f1 Off White */
+
+    --card: 0 0% 7%; /* #121212 deep charcoal surface */
+    --card-foreground: 0 0% 95%;
+
+    --popover: 0 0% 7%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 15 75% 49%; /* #d94e1f Fiery Orange */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 13%; /* #212121 */
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 0 0% 13%;
+    --muted-foreground: 0 0% 65%;
+
+    --accent: 15 75% 49%; /* #d94e1f Fiery Orange */
+    --accent-foreground: 0 0% 100%;
+
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 100%;
-    --border: 160 15% 18%;
-    --input: 160 15% 18%;
-    --ring: 38 85% 55%;
-    --sidebar-background: 160 30% 6%;
-    --sidebar-foreground: 40 33% 95%;
-    --sidebar-primary: 38 85% 55%;
-    --sidebar-primary-foreground: 160 30% 10%;
-    --sidebar-accent: 160 20% 12%;
-    --sidebar-accent-foreground: 40 33% 95%;
-    --sidebar-border: 160 15% 15%;
-    --sidebar-ring: 38 85% 55%;
+
+    --border: 0 0% 17%;
+    --input: 0 0% 17%;
+    --ring: 15 75% 49%;
+
+    --sidebar-background: 0 0% 3%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 15 75% 49%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 10%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 15%;
+    --sidebar-ring: 15 75% 49%;
   }
 }
 

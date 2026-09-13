@@ -1,6 +1,5 @@
 "use client";
-
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/Footer";
@@ -25,6 +24,9 @@ import {
 } from "lucide-react";
 
 export default function HowItWorksPage() {
+  const [quickEmail, setQuickEmail] = useState("");
+  const [prefilledEmail, setPrefilledEmail] = useState("");
+
   useEffect(() => {
     trackEvent("landing_page_view" as any, {
       path: "/how-it-works",
@@ -32,18 +34,58 @@ export default function HowItWorksPage() {
     });
   }, []);
 
-  const scrollToWishlist = () => {
+  const scrollToWishlist = (emailVal?: string) => {
+    const targetEmail = (emailVal || quickEmail).trim();
+    if (targetEmail) {
+      setPrefilledEmail(targetEmail);
+      const emailInputs = document.querySelectorAll<HTMLInputElement>(
+        "#wishlist-form input[type='email']"
+      );
+      emailInputs.forEach((inp) => {
+        inp.value = targetEmail;
+        inp.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    }
+
     const el = document.getElementById("wishlist-form");
     if (el) {
-      const yOffset = -90;
-      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
 
-      el.classList.add("ring-4", "ring-primary", "ring-offset-4", "ring-offset-background");
-      setTimeout(() => el.classList.remove("ring-4", "ring-primary", "ring-offset-4", "ring-offset-background"), 2000);
-      const input = el.querySelector<HTMLInputElement>("input");
-      if (input) input.focus();
+      el.classList.add(
+        "ring-4",
+        "ring-primary",
+        "ring-offset-4",
+        "ring-offset-background",
+        "scale-[1.01]",
+        "transition-all",
+        "duration-500"
+      );
+      setTimeout(() => {
+        el.classList.remove(
+          "ring-4",
+          "ring-primary",
+          "ring-offset-4",
+          "ring-offset-background",
+          "scale-[1.01]"
+        );
+      }, 2000);
+
+      setTimeout(() => {
+        const nameInput =
+          el.querySelector<HTMLInputElement>("input[type='text']") ||
+          el.querySelector<HTMLInputElement>("input");
+        if (nameInput) nameInput.focus();
+      }, 450);
     }
+  };
+
+  const handleHeroSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    trackEvent("hero_cta_clicked" as any, {
+      source: "how_it_works_hero",
+      hasEmail: Boolean(quickEmail.trim()),
+    });
+    scrollToWishlist(quickEmail.trim());
   };
 
   const steps = [
@@ -148,26 +190,44 @@ export default function HowItWorksPage() {
                 ProsConnect makes it easier to discover professionals, explore expertise, and connect with the right people for your next project, business need, or opportunity.
               </p>
 
-              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button
-                  size="lg"
-                  onClick={scrollToWishlist}
-                  className="w-full sm:w-auto h-13 px-8 rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 transition-all hover:scale-[1.02]"
+              {/* Interactive Quick Capture CTA */}
+              <div className="mt-8 max-w-xl mx-auto mb-3">
+                <form
+                  onSubmit={handleHeroSubmit}
+                  className="flex flex-col sm:flex-row items-center gap-3 p-1.5 sm:p-2 bg-card/70 border border-border/80 rounded-2xl shadow-xl backdrop-blur-xl transition-all focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20"
                 >
-                  Join the Wishlist
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => {
-                    const el = document.getElementById("steps-section");
-                    if (el) el.scrollIntoView({ behavior: "smooth" });
-                  }}
-                  className="w-full sm:w-auto h-13 px-8 rounded-xl font-semibold border-border hover:bg-secondary transition-all"
-                >
-                  Explore ProsConnect
-                </Button>
+                  <div className="relative w-full">
+                    <input
+                      type="email"
+                      placeholder="Enter your email to join the wishlist..."
+                      value={quickEmail}
+                      onChange={(e) => setQuickEmail(e.target.value)}
+                      className="w-full h-12 px-4 bg-transparent border-none text-foreground placeholder:text-muted-foreground/70 text-sm md:text-base focus:outline-none"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full sm:w-auto h-12 px-7 text-sm md:text-base rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 whitespace-nowrap transition-all hover:scale-[1.02] shrink-0 cursor-pointer"
+                  >
+                    Join the Wishlist
+                    <ArrowRight className="w-4 h-4 ml-1.5" />
+                  </Button>
+                </form>
+
+                <div className="flex items-center justify-center gap-4 mt-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const el = document.getElementById("steps-section");
+                      if (el) el.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="text-xs font-semibold text-muted-foreground hover:text-foreground inline-flex items-center gap-1.5 transition-colors cursor-pointer py-1"
+                  >
+                    <span>Explore ProsConnect (5 Steps)</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
 
               {/* Quick Flow Indicators */}
@@ -415,6 +475,7 @@ export default function HowItWorksPage() {
                 ctaText="Join the Wishlist"
                 headline="Join the ProsConnect Wishlist"
                 description="Early members receive prioritized invitations, onboarding benefits, and first access to new connections."
+                prefilledEmail={prefilledEmail}
               />
             </ScrollReveal>
           </div>

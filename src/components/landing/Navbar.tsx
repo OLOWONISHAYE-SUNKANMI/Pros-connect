@@ -48,9 +48,7 @@ export function Navbar({ onJoinWishlistClick }: NavbarProps) {
       document.getElementById("wishlist-signup-hero");
 
     if (el) {
-      const yOffset = -90;
-      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
 
       el.classList.add(
         "ring-4",

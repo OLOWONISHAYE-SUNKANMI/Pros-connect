@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/Footer";
 import { WishlistForm } from "@/components/landing/WishlistForm";
@@ -27,6 +27,9 @@ import {
 } from "lucide-react";
 
 export default function ForProfessionalsPage() {
+  const [quickEmail, setQuickEmail] = useState("");
+  const [prefilledEmail, setPrefilledEmail] = useState("");
+
   useEffect(() => {
     trackEvent("landing_page_view" as any, {
       path: "/for-professionals",
@@ -34,18 +37,58 @@ export default function ForProfessionalsPage() {
     });
   }, []);
 
-  const scrollToWishlist = () => {
+  const scrollToWishlist = (emailVal?: string) => {
+    const targetEmail = (emailVal || quickEmail).trim();
+    if (targetEmail) {
+      setPrefilledEmail(targetEmail);
+      const emailInputs = document.querySelectorAll<HTMLInputElement>(
+        "#wishlist-form input[type='email']"
+      );
+      emailInputs.forEach((inp) => {
+        inp.value = targetEmail;
+        inp.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    }
+
     const el = document.getElementById("wishlist-form");
     if (el) {
-      const yOffset = -90;
-      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
 
-      el.classList.add("ring-4", "ring-primary", "ring-offset-4", "ring-offset-background");
-      setTimeout(() => el.classList.remove("ring-4", "ring-primary", "ring-offset-4", "ring-offset-background"), 2000);
-      const input = el.querySelector<HTMLInputElement>("input");
-      if (input) input.focus();
+      el.classList.add(
+        "ring-4",
+        "ring-primary",
+        "ring-offset-4",
+        "ring-offset-background",
+        "scale-[1.01]",
+        "transition-all",
+        "duration-500"
+      );
+      setTimeout(() => {
+        el.classList.remove(
+          "ring-4",
+          "ring-primary",
+          "ring-offset-4",
+          "ring-offset-background",
+          "scale-[1.01]"
+        );
+      }, 2000);
+
+      setTimeout(() => {
+        const nameInput =
+          el.querySelector<HTMLInputElement>("input[type='text']") ||
+          el.querySelector<HTMLInputElement>("input");
+        if (nameInput) nameInput.focus();
+      }, 450);
     }
+  };
+
+  const handleHeroSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    trackEvent("hero_cta_clicked" as any, {
+      source: "for_professionals_hero",
+      hasEmail: Boolean(quickEmail.trim()),
+    });
+    scrollToWishlist(quickEmail.trim());
   };
 
   const capabilities = [
@@ -162,15 +205,30 @@ export default function ForProfessionalsPage() {
                 Create a professional presence that helps people discover what you do, understand your expertise, and connect with you when the right opportunity comes along.
               </p>
 
-              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button
-                  size="lg"
-                  onClick={scrollToWishlist}
-                  className="w-full sm:w-auto h-13 px-8 rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 transition-all hover:scale-[1.02]"
+              {/* Interactive Quick Capture CTA */}
+              <div className="mt-8 max-w-xl mx-auto mb-3">
+                <form
+                  onSubmit={handleHeroSubmit}
+                  className="flex flex-col sm:flex-row items-center gap-3 p-1.5 sm:p-2 bg-card/70 border border-border/80 rounded-2xl shadow-xl backdrop-blur-xl transition-all focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20"
                 >
-                  Join as a Professional
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                  <div className="relative w-full">
+                    <input
+                      type="email"
+                      placeholder="Enter your professional email address..."
+                      value={quickEmail}
+                      onChange={(e) => setQuickEmail(e.target.value)}
+                      className="w-full h-12 px-4 bg-transparent border-none text-foreground placeholder:text-muted-foreground/70 text-sm md:text-base focus:outline-none"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full sm:w-auto h-12 px-7 text-sm md:text-base rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 whitespace-nowrap transition-all hover:scale-[1.02] shrink-0 cursor-pointer"
+                  >
+                    Join as a Professional
+                    <ArrowRight className="w-4 h-4 ml-1.5" />
+                  </Button>
+                </form>
               </div>
 
               {/* Quote highlight */}
@@ -310,7 +368,33 @@ export default function ForProfessionalsPage() {
           </div>
         </section>
 
-        {/* Early Access & Final CTA Section */}
+        {/* Section: Early Access */}
+        <section className="py-16 md:py-20 bg-primary/5 border-y border-primary/20 px-6 text-center">
+          <div className="container max-w-3xl mx-auto">
+            <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider mb-4 border border-primary/20">
+              <Sparkles className="w-3.5 h-3.5" />
+              Early Access
+            </span>
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-foreground">
+              Be Among the First Professionals on ProsConnect.
+            </h3>
+            <p className="mt-3 text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
+              Join the early-access list and secure your place in the growing ProsConnect professional community.
+            </p>
+            <div className="mt-6 flex justify-center">
+              <Button
+                size="lg"
+                onClick={() => scrollToWishlist()}
+                className="h-12 px-8 rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] cursor-pointer"
+              >
+                Join as a Professional
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Final CTA Section */}
         <section className="py-24 md:py-32 bg-secondary/30 border-t border-border/60 px-6 relative overflow-hidden">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-primary/5 rounded-full blur-[140px] pointer-events-none" />
 
@@ -318,7 +402,7 @@ export default function ForProfessionalsPage() {
             <ScrollReveal className="mb-10">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold uppercase tracking-wider mb-4 border border-primary/20">
                 <Sparkles className="w-3.5 h-3.5" />
-                Early Access Priority
+                Priority Placement
               </div>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-extrabold tracking-tight text-foreground text-balance">
                 Put Your Expertise in the Right Room.
@@ -335,6 +419,7 @@ export default function ForProfessionalsPage() {
                 ctaText="Join as a Professional"
                 headline="Join as a Professional"
                 description="Secure early platform placement, verified profile badging, and priority matching upon launch."
+                prefilledEmail={prefilledEmail}
               />
             </ScrollReveal>
           </div>

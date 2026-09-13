@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Navbar } from "@/components/landing/Navbar";
 import { Footer } from "@/components/landing/Footer";
 import { WishlistForm } from "@/components/landing/WishlistForm";
@@ -28,6 +28,9 @@ import {
 } from "lucide-react";
 
 export default function ForClientsPage() {
+  const [quickEmail, setQuickEmail] = useState("");
+  const [prefilledEmail, setPrefilledEmail] = useState("");
+
   useEffect(() => {
     trackEvent("landing_page_view" as any, {
       path: "/for-clients",
@@ -35,18 +38,58 @@ export default function ForClientsPage() {
     });
   }, []);
 
-  const scrollToWishlist = () => {
+  const scrollToWishlist = (emailVal?: string) => {
+    const targetEmail = (emailVal || quickEmail).trim();
+    if (targetEmail) {
+      setPrefilledEmail(targetEmail);
+      const emailInputs = document.querySelectorAll<HTMLInputElement>(
+        "#wishlist-form input[type='email']"
+      );
+      emailInputs.forEach((inp) => {
+        inp.value = targetEmail;
+        inp.dispatchEvent(new Event("input", { bubbles: true }));
+      });
+    }
+
     const el = document.getElementById("wishlist-form");
     if (el) {
-      const yOffset = -90;
-      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
 
-      el.classList.add("ring-4", "ring-primary", "ring-offset-4", "ring-offset-background");
-      setTimeout(() => el.classList.remove("ring-4", "ring-primary", "ring-offset-4", "ring-offset-background"), 2000);
-      const input = el.querySelector<HTMLInputElement>("input");
-      if (input) input.focus();
+      el.classList.add(
+        "ring-4",
+        "ring-primary",
+        "ring-offset-4",
+        "ring-offset-background",
+        "scale-[1.01]",
+        "transition-all",
+        "duration-500"
+      );
+      setTimeout(() => {
+        el.classList.remove(
+          "ring-4",
+          "ring-primary",
+          "ring-offset-4",
+          "ring-offset-background",
+          "scale-[1.01]"
+        );
+      }, 2000);
+
+      setTimeout(() => {
+        const nameInput =
+          el.querySelector<HTMLInputElement>("input[type='text']") ||
+          el.querySelector<HTMLInputElement>("input");
+        if (nameInput) nameInput.focus();
+      }, 450);
     }
+  };
+
+  const handleHeroSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    trackEvent("hero_cta_clicked" as any, {
+      source: "for_clients_hero",
+      hasEmail: Boolean(quickEmail.trim()),
+    });
+    scrollToWishlist(quickEmail.trim());
   };
 
   const clientCapabilities = [
@@ -180,15 +223,30 @@ export default function ForClientsPage() {
                 From a single project to a long-term business relationship, ProsConnect helps you discover professionals with the skills and experience to move things forward.
               </p>
 
-              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Button
-                  size="lg"
-                  onClick={scrollToWishlist}
-                  className="w-full sm:w-auto h-13 px-8 rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 transition-all hover:scale-[1.02]"
+              {/* Interactive Quick Capture CTA */}
+              <div className="mt-8 max-w-xl mx-auto mb-3">
+                <form
+                  onSubmit={handleHeroSubmit}
+                  className="flex flex-col sm:flex-row items-center gap-3 p-1.5 sm:p-2 bg-card/70 border border-border/80 rounded-2xl shadow-xl backdrop-blur-xl transition-all focus-within:border-primary/60 focus-within:ring-2 focus-within:ring-primary/20"
                 >
-                  Join as a Client
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                  <div className="relative w-full">
+                    <input
+                      type="email"
+                      placeholder="Enter your email to find expertise..."
+                      value={quickEmail}
+                      onChange={(e) => setQuickEmail(e.target.value)}
+                      className="w-full h-12 px-4 bg-transparent border-none text-foreground placeholder:text-muted-foreground/70 text-sm md:text-base focus:outline-none"
+                    />
+                  </div>
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full sm:w-auto h-12 px-7 text-sm md:text-base rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 whitespace-nowrap transition-all hover:scale-[1.02] shrink-0 cursor-pointer"
+                  >
+                    Join as a Client
+                    <ArrowRight className="w-4 h-4 ml-1.5" />
+                  </Button>
+                </form>
               </div>
             </ScrollReveal>
           </div>
@@ -339,6 +397,16 @@ export default function ForClientsPage() {
               <p className="mt-6 text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
                 ProsConnect is designed to help you move beyond endless searching and toward more relevant professional connections.
               </p>
+              <div className="mt-8 flex justify-center">
+                <Button
+                  size="lg"
+                  onClick={() => scrollToWishlist()}
+                  className="h-12 px-8 rounded-xl font-semibold bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/25 transition-all hover:scale-[1.02] cursor-pointer"
+                >
+                  Join as a Client
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
             </ScrollReveal>
           </div>
         </section>
@@ -368,6 +436,7 @@ export default function ForClientsPage() {
                 ctaText="Join as a Client"
                 headline="Join as a Client"
                 description="Get priority access to vetted professional directories and exclusive matching tools upon release."
+                prefilledEmail={prefilledEmail}
               />
             </ScrollReveal>
           </div>

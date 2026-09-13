@@ -45,19 +45,35 @@ function getFallbackCount(): number {
   return BASE_COUNT + (globalForWishlist._localWishlist?.length ?? 0);
 }
 
+function isDatabaseConfigured(): boolean {
+  const url = process.env.DATABASE_URL;
+  if (!url) return false;
+  // If it's a placeholder or local postgres that is not running, gracefully skip
+  if (
+    url.includes("randompassword") ||
+    url.includes("johndoe") ||
+    url.includes("localhost:5432")
+  ) {
+    return false;
+  }
+  return true;
+}
+
 export async function GET() {
   try {
     let count = getFallbackCount();
-    // Try to get count from Prisma if DB is configured
-    try {
-      if ((prisma as any).wishlistMember) {
-        const dbCount = await (prisma as any).wishlistMember.count();
-        if (dbCount > 0) {
-          count = BASE_COUNT + dbCount;
+    // Try to get count from Prisma only if DB is configured
+    if (isDatabaseConfigured()) {
+      try {
+        if ((prisma as any).wishlistMember) {
+          const dbCount = await (prisma as any).wishlistMember.count();
+          if (dbCount > 0) {
+            count = BASE_COUNT + dbCount;
+          }
         }
+      } catch {
+        // Prisma offline or schema unmigrated, fall back smoothly
       }
-    } catch {
-      // Prisma offline or schema unmigrated, fall back smoothly
     }
 
     return NextResponse.json({
@@ -121,38 +137,40 @@ export async function POST(req: Request) {
       );
     }
 
-    // 2. Try DB check and insertion if Prisma is active
+    // 2. Try DB check and insertion if Prisma is active and DB is configured
     let dbSuccess = false;
-    try {
-      if ((prisma as any).wishlistMember) {
-        const existingInDb = await (prisma as any).wishlistMember.findUnique({
-          where: { email: trimmedEmail },
-        });
+    if (isDatabaseConfigured()) {
+      try {
+        if ((prisma as any).wishlistMember) {
+          const existingInDb = await (prisma as any).wishlistMember.findUnique({
+            where: { email: trimmedEmail },
+          });
 
-        if (existingInDb) {
-          return NextResponse.json(
-            {
-              success: false,
-              code: "ALREADY_REGISTERED",
-              message: "This email is already on the wishlist.",
+          if (existingInDb) {
+            return NextResponse.json(
+              {
+                success: false,
+                code: "ALREADY_REGISTERED",
+                message: "This email is already on the wishlist.",
+              },
+              { status: 409 }
+            );
+          }
+
+          await (prisma as any).wishlistMember.create({
+            data: {
+              fullName: name.trim(),
+              email: trimmedEmail,
+              role: validRole,
+              status: "active",
+              source,
             },
-            { status: 409 }
-          );
+          });
+          dbSuccess = true;
         }
-
-        await (prisma as any).wishlistMember.create({
-          data: {
-            fullName: name.trim(),
-            email: trimmedEmail,
-            role: validRole,
-            status: "active",
-            source,
-          },
-        });
-        dbSuccess = true;
+      } catch {
+        // Prisma error / connection refused: continue with resilient fallback
       }
-    } catch {
-      // Prisma error / connection refused: continue with resilient fallback
     }
 
     // Record into local memory cache as well

@@ -8,7 +8,7 @@ import {
 let resendClient: Resend | null = null;
 
 function getResendClient(): Resend | null {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = process.env.RESEND_API_KEY?.trim();
   if (!apiKey) {
     return null;
   }
@@ -53,19 +53,46 @@ export async function sendWishlistWelcomeEmail(
   const html = generateWishlistWelcomeEmailHtml(data);
   const subject = `Welcome to the ProsConnect Wishlist! 🚀 [Priority #${queueNumber.toLocaleString()}]`;
 
-  try {
-    const emailResponse = await resend.emails.send({
-      from: fromAddress,
-      to: [email],
-      subject,
-      html,
-      tags: [
-        { name: "category", value: "wishlist_confirmation" },
-        { name: "role", value: role },
-      ],
-    });
+  let emailResponse: any = null;
 
-    if (emailResponse.error) {
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      emailResponse = await resend.emails.send({
+        from: fromAddress,
+        to: [email],
+        subject,
+        html,
+        tags: [
+          { name: "category", value: "wishlist_confirmation" },
+          { name: "role", value: role },
+        ],
+      });
+
+      if (emailResponse?.error) {
+        if (
+          attempt < 2 &&
+          (emailResponse.error.name === "application_error" ||
+            emailResponse.error.statusCode === null)
+        ) {
+          console.warn(`[Resend] Transient network issue on attempt ${attempt}. Retrying in 1s...`);
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+          continue;
+        }
+      }
+      break;
+    } catch (err: any) {
+      if (attempt < 2) {
+        console.warn(`[Resend] Fetch exception on attempt ${attempt}. Retrying in 1s...`, err.message);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        continue;
+      }
+      emailResponse = { error: { message: err.message } };
+      break;
+    }
+  }
+
+  try {
+    if (emailResponse?.error) {
       console.error("[Resend Error] Failed to send email:", emailResponse.error);
       return {
         success: false,

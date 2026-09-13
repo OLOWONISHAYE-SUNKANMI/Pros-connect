@@ -55,52 +55,52 @@ export function Footer() {
             </h4>
             <ul className="space-y-2.5 text-sm text-muted-foreground">
               <li>
-                <button
-                  onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                  className="hover:text-foreground transition-colors cursor-pointer"
+                <Link
+                  href="/"
+                  className="hover:text-foreground transition-colors"
                 >
                   Home
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => handleScrollTo("how-it-works")}
-                  className="hover:text-foreground transition-colors cursor-pointer"
+                <Link
+                  href="/how-it-works"
+                  className="hover:text-foreground transition-colors"
                 >
                   How It Works
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => handleScrollTo("for-professionals")}
-                  className="hover:text-foreground transition-colors cursor-pointer"
+                <Link
+                  href="/for-professionals"
+                  className="hover:text-foreground transition-colors"
                 >
                   For Professionals
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => handleScrollTo("for-clients")}
-                  className="hover:text-foreground transition-colors cursor-pointer"
+                <Link
+                  href="/for-clients"
+                  className="hover:text-foreground transition-colors"
                 >
                   For Clients
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => handleScrollTo("about")}
-                  className="hover:text-foreground transition-colors cursor-pointer"
+                <Link
+                  href="/about"
+                  className="hover:text-foreground transition-colors"
                 >
                   About
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => handleScrollTo("faq")}
-                  className="hover:text-foreground transition-colors cursor-pointer"
+                <Link
+                  href="/faq"
+                  className="hover:text-foreground transition-colors"
                 >
-                  FAQ
-                </button>
+                  FAQs
+                </Link>
               </li>
             </ul>
           </div>

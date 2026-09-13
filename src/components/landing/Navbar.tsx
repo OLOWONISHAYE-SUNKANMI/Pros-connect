@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { trackEvent } from "@/lib/analytics";
@@ -12,9 +13,18 @@ interface NavbarProps {
   onJoinWishlistClick?: () => void;
 }
 
+const navLinks = [
+  { label: "How It Works", href: "/how-it-works", event: "nav_how_it_works" },
+  { label: "For Professionals", href: "/for-professionals", event: "professional_cta_clicked" },
+  { label: "For Clients", href: "/for-clients", event: "client_cta_clicked" },
+  { label: "About", href: "/about", event: "nav_about" },
+  { label: "FAQs", href: "/faq", event: "nav_faq" },
+];
+
 export function Navbar({ onJoinWishlistClick }: NavbarProps) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,25 +34,51 @@ export function Navbar({ onJoinWishlistClick }: NavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (href: string, eventName?: string) => {
-    setOpen(false);
-    if (eventName) {
-      trackEvent(eventName as any, { href });
-    }
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   const handleJoinClick = () => {
     setOpen(false);
-    trackEvent("hero_cta_clicked", { source: "navbar_cta" });
+    trackEvent("hero_cta_clicked", { source: "navbar_cta", path: pathname });
+
     if (onJoinWishlistClick) {
       onJoinWishlistClick();
+      return;
+    }
+
+    const el =
+      document.getElementById("wishlist-form") ||
+      document.getElementById("wishlist-signup-hero");
+
+    if (el) {
+      const yOffset = -90;
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+
+      el.classList.add(
+        "ring-4",
+        "ring-primary",
+        "ring-offset-4",
+        "ring-offset-background",
+        "scale-[1.01]",
+        "transition-all",
+        "duration-500"
+      );
+      setTimeout(() => {
+        el.classList.remove(
+          "ring-4",
+          "ring-primary",
+          "ring-offset-4",
+          "ring-offset-background",
+          "scale-[1.01]"
+        );
+      }, 2000);
+
+      setTimeout(() => {
+        const input =
+          el.querySelector<HTMLInputElement>("input[type='text']") ||
+          el.querySelector<HTMLInputElement>("input");
+        if (input) input.focus();
+      }, 450);
     } else {
-      const el = document.getElementById("wishlist-signup-hero") || document.getElementById("wishlist-form");
-      if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+      window.location.href = "/#wishlist-signup-hero";
     }
   };
 
@@ -50,8 +86,8 @@ export function Navbar({ onJoinWishlistClick }: NavbarProps) {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "bg-background/85 backdrop-blur-xl border-b border-border shadow-sm py-3"
-          : "bg-background/40 backdrop-blur-md py-4"
+          ? "bg-background/90 backdrop-blur-xl border-b border-border shadow-sm py-3"
+          : "bg-background/50 backdrop-blur-md py-4"
       }`}
     >
       <div className="container flex items-center justify-between">
@@ -59,43 +95,45 @@ export function Navbar({ onJoinWishlistClick }: NavbarProps) {
         <Link
           href="/"
           className="flex items-center group transition-transform active:scale-95"
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() => {
+            if (pathname === "/") {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+          }}
         >
           <BrandLogo size="md" />
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-7">
-          <button
-            onClick={() => handleNavClick("#how-it-works")}
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-          >
-            How It Works
-          </button>
-          <button
-            onClick={() => handleNavClick("#for-professionals", "professional_cta_clicked")}
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-          >
-            For Professionals
-          </button>
-          <button
-            onClick={() => handleNavClick("#for-clients", "client_cta_clicked")}
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-          >
-            For Clients
-          </button>
-          <button
-            onClick={() => handleNavClick("#about")}
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-          >
-            About
-          </button>
-          <button
-            onClick={() => handleNavClick("#faq")}
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-          >
-            FAQ
-          </button>
+          {navLinks.map((item) => {
+            const isActive =
+              pathname === item.href ||
+              (item.href === "/faq" && pathname === "/faqs");
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => {
+                  trackEvent(item.event as any, { href: item.href });
+                  if (pathname === item.href) {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                }}
+                className={`text-sm font-medium transition-all relative py-1 cursor-pointer ${
+                  isActive
+                    ? "text-primary font-semibold"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {item.label}
+                {isActive && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary rounded-full animate-fade-in" />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Right CTA */}
@@ -128,36 +166,32 @@ export function Navbar({ onJoinWishlistClick }: NavbarProps) {
       {open && (
         <div className="md:hidden border-b border-border bg-background/95 backdrop-blur-2xl px-6 py-6 space-y-4 animate-reveal-up shadow-2xl">
           <nav className="flex flex-col space-y-3">
-            <button
-              onClick={() => handleNavClick("#how-it-works")}
-              className="text-left py-2 text-base font-medium text-foreground hover:text-primary transition-colors border-b border-border/50"
-            >
-              How It Works
-            </button>
-            <button
-              onClick={() => handleNavClick("#for-professionals", "professional_cta_clicked")}
-              className="text-left py-2 text-base font-medium text-foreground hover:text-primary transition-colors border-b border-border/50"
-            >
-              For Professionals
-            </button>
-            <button
-              onClick={() => handleNavClick("#for-clients", "client_cta_clicked")}
-              className="text-left py-2 text-base font-medium text-foreground hover:text-primary transition-colors border-b border-border/50"
-            >
-              For Clients
-            </button>
-            <button
-              onClick={() => handleNavClick("#about")}
-              className="text-left py-2 text-base font-medium text-foreground hover:text-primary transition-colors border-b border-border/50"
-            >
-              About
-            </button>
-            <button
-              onClick={() => handleNavClick("#faq")}
-              className="text-left py-2 text-base font-medium text-foreground hover:text-primary transition-colors"
-            >
-              FAQ
-            </button>
+            {navLinks.map((item) => {
+              const isActive =
+                pathname === item.href ||
+                (item.href === "/faq" && pathname === "/faqs");
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => {
+                    setOpen(false);
+                    trackEvent(item.event as any, { href: item.href });
+                  }}
+                  className={`text-left py-2.5 text-base font-medium transition-colors border-b border-border/50 flex items-center justify-between ${
+                    isActive
+                      ? "text-primary font-bold"
+                      : "text-foreground hover:text-primary"
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  {isActive && (
+                    <span className="w-2 h-2 rounded-full bg-primary" />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="pt-2">

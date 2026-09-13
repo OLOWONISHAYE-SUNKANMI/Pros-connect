@@ -26,6 +26,9 @@ interface WishlistFormProps {
   compact?: boolean;
   onSuccess?: () => void;
   prefilledEmail?: string;
+  ctaText?: string;
+  headline?: string;
+  description?: string;
 }
 
 export function WishlistForm({
@@ -35,6 +38,9 @@ export function WishlistForm({
   compact = false,
   onSuccess,
   prefilledEmail = "",
+  ctaText = "Join the Wishlist",
+  headline,
+  description,
 }: WishlistFormProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState(prefilledEmail);
@@ -254,10 +260,11 @@ export function WishlistForm({
               Be First In Line
             </div>
             <h3 className="text-xl md:text-2xl font-bold font-display text-foreground tracking-tight">
-              Join the ProsConnect Wishlist
+              {headline || "Join the ProsConnect Wishlist"}
             </h3>
             <p className="text-muted-foreground text-xs md:text-sm mt-1 leading-relaxed">
-              ProsConnect is launching soon. Join the wishlist to get early access, launch updates, and exclusive platform benefits.
+              {description ||
+                "ProsConnect is launching soon. Join the wishlist to get early access, launch updates, and exclusive platform benefits."}
             </p>
           </div>
         )}
@@ -361,7 +368,7 @@ export function WishlistForm({
               </span>
             ) : (
               <span className="flex items-center justify-center gap-2">
-                Join the Wishlist
+                {ctaText}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </span>
             )}
